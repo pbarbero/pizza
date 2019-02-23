@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28010.2041
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "pizza.lib", "pizza\pizza.lib.csproj", "{85C3FDDA-4EA5-4125-9DA5-B78D68407751}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "pizza.lib", "pizza.lib\pizza.lib.csproj", "{85C3FDDA-4EA5-4125-9DA5-B78D68407751}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "pizza.console", "pizza.console\pizza.console.csproj", "{444041F5-F7C3-4237-8897-46CFED4C14C8}"
 EndProject

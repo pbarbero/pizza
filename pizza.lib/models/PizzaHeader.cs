@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace pizza.console
+namespace pizza
 {
     public class PizzaHeader
     {

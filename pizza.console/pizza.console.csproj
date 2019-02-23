@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\pizza\pizza.lib.csproj" />
+    <ProjectReference Include="..\pizza.lib\pizza.lib.csproj" />
   </ItemGroup>
 
 </Project>
