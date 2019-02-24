@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using pizza;
+using pizza.lib.models;
 
 namespace pizza.console
 {
     public static class PizzaParser
     {
-        public static void Parse(IEnumerable<string> lines)
+        public static Pizza Parse(IEnumerable<string> lines)
         {
             var pizzaHeader = GetPizzaHeader(lines.FirstOrDefault());
-            var pizza = GetPizza(lines.Skip(1), pizzaHeader);
+            return GetPizza(lines.Skip(1), pizzaHeader);
         }
 
         private static PizzaHeader GetPizzaHeader(string line)
@@ -32,16 +32,17 @@ namespace pizza.console
 
             for (var i = 0; i < pizzaHeader.Rows; i++)
             {
-                var splittedLine = lines.ToList()[i].Split(" ");
+                var splittedLine = lines.ToList()[i];
 
                 for (var j = 0; j < pizzaHeader.Columns; j++)
                 {
-                    ingredients[i, j] = GetChar(splittedLine[j]);
+                    ingredients[i, j] = splittedLine[j];
                 }
             }
 
             return new Pizza()
             {
+                Header = pizzaHeader,
                 Ingredients = ingredients
             };
         }
@@ -56,18 +57,6 @@ namespace pizza.console
             }
 
             return number;
-        }
-
-        private static char GetChar(string foo)
-        {
-            if (foo.Length != 1)
-            {
-                throw new Exception("Ingredientes cannot be parsed");
-            }
-            else
-            {
-                return foo[0];
-            }
-        }
+        }        
     }
 }
