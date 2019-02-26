@@ -34,7 +34,8 @@ namespace pizza.console
             }
 
             Console.WriteLine("Let's cut!");
-            pizza.Slices = pizzaCutter.Cut(pizza); 
+            pizzaCutter.InitPizza(pizza);
+            pizza.Slices = pizzaCutter.Cut(); 
         }
 
         private static IEnumerable<string> ReadFile(string filePath)
