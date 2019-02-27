@@ -29,5 +29,13 @@ namespace pizza.lib.models
 
             return new Cell() { X = maxX, Y = maxY };
         }
+
+        public bool HasEnoughIngredients(int minIngredients)
+        {
+            var tomatoes = Cells.Where(x => x.Ingredient == 'T');
+            var mushrooms = Cells.Where(x => x.Ingredient == 'M');
+
+            return tomatoes.Count() >= minIngredients && mushrooms.Count() >= 1;
+        }
     }
 }

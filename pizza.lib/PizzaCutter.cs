@@ -27,100 +27,50 @@ namespace pizza.lib
         public IEnumerable<Slice> Cut()
         {
             var slices = new List<Slice>();
+            var initColumn = 0;
 
-            var row = 0;
-            var column = 0;
-            var lastRow = 0;
-            var lastColumn = 0;
-            var slice = new Slice();
-
-            while (column < _columns)
+            for (var column = 1; column < _columns; column++)
             {
-                while (row < _rows)
+                var slice = GetSlice(initColumn, column);
+
+                if (slice.HasEnoughIngredients(_minIngredients))
                 {
-                    if (HasEnoughIngredients(slice))
-                    {
-                        slices.Add(slice);
-                        row = slice.GetMaxCell().X + 1;
-                        column = slice.GetMinCell().Y;
-                        lastRow = row;
-                        lastColumn = column;
-                        slice = new Slice();
-                    }
-                    else
-                    {
-                        var cellsToAdd = BuildSlice(row, column, lastRow, lastColumn);
-                        slice.Cells.AddRange(cellsToAdd);
-                        row++;
-                        column++;
-
-                        if (row >= _rows)
-                        {
-                            slices.Last().Cells.AddRange(slice.Cells);
-                            slice = new Slice();
-                        }
-                    }
+                    slices.Add(slice);
+                    initColumn = slice.GetMaxCell().Y + 1;
                 }
-
-                row = 0;
-                column = slices.Last().GetMaxCell().Y + 1;
+                else if (IsLastSlice(slice))
+                {
+                    slices.Last().Cells.AddRange(slice.Cells);
+                }
             }
 
             return slices;
         }
 
-        private List<Cell> BuildSlice(int centerX, int centerY, int rowToStart, int columnToStart)
+        private Slice GetSlice(int initColumn, int lastColumn)
         {
-            var cells = new List<Cell>()
+            var slice = new Slice();
+
+            for (var column = initColumn; column <= lastColumn; column++)
             {
-                new Cell()
+                for (var row = 0; row < _rows; row++)
                 {
-                    X = centerX,
-                    Y = centerY,
-                    Ingredient = _pizza.Ingredients[centerX, centerY]
+                    slice.Cells.Add(new Cell()
+                    {
+                        X = row,
+                        Y = column,
+                        Ingredient = _pizza.Ingredients[row, column]
+                    });
                 }
-            };
-
-            for (var i = rowToStart; i < centerX; i++)
-            {
-                cells.Add(new Cell()
-                {
-                    X = i,
-                    Y = centerY,
-                    Ingredient = _pizza.Ingredients[i, centerY]
-                });
             }
 
-
-            for (var j = rowToStart; j < centerX; j++)
-            {
-                cells.Add(new Cell()
-                {
-                    X = centerX,
-                    Y = j,
-                    Ingredient = _pizza.Ingredients[centerX, j]
-                });
-            }
-
-            return cells; 
+            return slice;
         }
 
-        private int GetMaxXFromSlice(Slice slice)
+        private bool IsLastSlice(Slice slice)
         {
-            return slice.Cells.Max(cell => cell.X);
-        }
-        private int GetMaxYFromSlice(Slice slice)
-        {
-            return slice.Cells.Max(cell => cell.Y);
-        }
-
-
-        private bool HasEnoughIngredients(Slice slice)
-        {
-            var tomatoes = slice.Cells.Where(x => x.Ingredient == 'T');
-            var mushrooms = slice.Cells.Where(x => x.Ingredient == 'M');
-
-            return tomatoes.Count() >= _minIngredients && mushrooms.Count() >= 1;
+            return slice.GetMaxCell().X == _rows - 1
+                && slice.GetMaxCell().Y == _columns - 1;
         }
     }
 }

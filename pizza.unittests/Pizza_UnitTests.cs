@@ -19,7 +19,8 @@ namespace pizza.unittests
         public void Test_Slices()
         {
             var pizza = MockPizza();
-            pizza.Slices = pizzaCutter.Cut(pizza);
+            pizzaCutter.InitPizza(pizza);
+            pizza.Slices = pizzaCutter.Cut();
 
             Assert.True(pizza.Slices.Count() == 3);
         }
