@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using pizza.lib;
+using pizza.lib.models;
 
 namespace pizza.console
 {
@@ -35,7 +37,17 @@ namespace pizza.console
 
             Console.WriteLine("Let's cut!");
             pizzaCutter.InitPizza(pizza);
-            pizza.Slices = pizzaCutter.Cut(); 
+            pizza.Slices = pizzaCutter.Cut();
+
+            Console.WriteLine($"My pizza has {pizza.Slices.Count()} slices");
+
+            foreach (var slice in pizza.Slices)
+            {
+                Console.Write($"{slice.GetMinCell().X} {slice.GetMinCell().Y} {slice.GetMaxCell().X} {slice.GetMaxCell().Y}");
+                Console.Write("\n");
+            }
+
+            Console.ReadKey();
         }
 
         private static IEnumerable<string> ReadFile(string filePath)

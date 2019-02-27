@@ -30,56 +30,97 @@ namespace pizza.lib
 
             var row = 0;
             var column = 0;
-            var diagonal = 0;
+            var lastRow = 0;
+            var lastColumn = 0;
             var slice = new Slice();
 
-            while (!HasEnoughIngredients(slice))
+            while (column < _columns)
             {
-                var cells = BuildAdjacentCells();
-                slice.Cells.AddRange(cells);
+                while (row < _rows)
+                {
+                    if (HasEnoughIngredients(slice))
+                    {
+                        slices.Add(slice);
+                        row = slice.GetMaxCell().X + 1;
+                        column = slice.GetMinCell().Y;
+                        lastRow = row;
+                        lastColumn = column;
+                        slice = new Slice();
+                    }
+                    else
+                    {
+                        var cellsToAdd = BuildSlice(row, column, lastRow, lastColumn);
+                        slice.Cells.AddRange(cellsToAdd);
+                        row++;
+                        column++;
+
+                        if (row >= _rows)
+                        {
+                            slices.Last().Cells.AddRange(slice.Cells);
+                            slice = new Slice();
+                        }
+                    }
+                }
+
+                row = 0;
+                column = slices.Last().GetMaxCell().Y + 1;
             }
 
             return slices;
         }
 
-        private List<Cell> BuildAdjacentCells(int diagonal, int initRow, int column)
+        private List<Cell> BuildSlice(int centerX, int centerY, int rowToStart, int columnToStart)
         {
             var cells = new List<Cell>()
             {
                 new Cell()
                 {
-                    X = diagonal,
-                    Y = diagonal,
-                    Ingredient = _pizza.Ingredients[diagonal, diagonal]
+                    X = centerX,
+                    Y = centerY,
+                    Ingredient = _pizza.Ingredients[centerX, centerY]
                 }
             };
 
-            for(var row = initRow; row < diagonal - 1; row++)
+            for (var i = rowToStart; i < centerX; i++)
             {
                 cells.Add(new Cell()
                 {
-                    X = row,
-                    Y = column,
-                    Ingredient = _pizza.Ingredients[row, column]
+                    X = i,
+                    Y = centerY,
+                    Ingredient = _pizza.Ingredients[i, centerY]
                 });
+            }
 
+
+            for (var j = rowToStart; j < centerX; j++)
+            {
                 cells.Add(new Cell()
                 {
-                    X = column,
-                    Y = row,
-                    Ingredient = _pizza.Ingredients[column, row]
+                    X = centerX,
+                    Y = j,
+                    Ingredient = _pizza.Ingredients[centerX, j]
                 });
-            };
+            }
 
             return cells; 
         }
+
+        private int GetMaxXFromSlice(Slice slice)
+        {
+            return slice.Cells.Max(cell => cell.X);
+        }
+        private int GetMaxYFromSlice(Slice slice)
+        {
+            return slice.Cells.Max(cell => cell.Y);
+        }
+
 
         private bool HasEnoughIngredients(Slice slice)
         {
             var tomatoes = slice.Cells.Where(x => x.Ingredient == 'T');
             var mushrooms = slice.Cells.Where(x => x.Ingredient == 'M');
 
-            return tomatoes.Count() > minIngredients && mushrooms.Count() > 1;
+            return tomatoes.Count() >= _minIngredients && mushrooms.Count() >= 1;
         }
     }
 }
