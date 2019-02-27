@@ -16,15 +16,33 @@ namespace pizza.lib
 
         }
 
-        public void InitPizza(Pizza pizza)
+        public IEnumerable<Slice> InitialCut(Pizza pizza)
         {
             _pizza = pizza;
             _minIngredients = pizza.Header.MinIngredients;
             _rows = pizza.Header.Rows;
             _columns = pizza.Header.Columns;
+
+
+            for (var column = 1; column < _columns; column++)
+            {
+                var slice = GetSlice(initColumn, column);
+
+                if (slice.HasEnoughIngredients(_minIngredients))
+                {
+                    slices.Add(slice);
+                    initColumn = slice.GetMaxCell().Y + 1;
+                }
+                else if (IsLastSlice(slice))
+                {
+                    slices.Last().Cells.AddRange(slice.Cells);
+                }
+            }
+
+            return slices;
         }
 
-        public IEnumerable<Slice> Cut()
+        private IEnumerable<Slice> VerticalCut()
         {
             var slices = new List<Slice>();
             var initColumn = 0;

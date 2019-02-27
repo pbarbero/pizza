@@ -5,7 +5,6 @@ namespace pizza.lib
 {
     public interface IPizzaCutter
     {
-         IEnumerable<Slice> Cut();
-         void InitPizza(Pizza pizza);
+        IEnumerable<Slice> InitialCut(Pizza pizza);
     }
 }

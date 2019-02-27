@@ -20,7 +20,7 @@ namespace pizza.unittests
         {
             var pizza = MockPizza();
             pizzaCutter.InitPizza(pizza);
-            pizza.Slices = pizzaCutter.Cut();
+            pizza.Slices = pizzaCutter.InitialCut();
 
             Assert.True(pizza.Slices.Count() == 3);
         }

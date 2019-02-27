@@ -46,8 +46,7 @@ namespace pizza.console
 
             //Cut pizza
             Console.WriteLine("Let's cut!");
-            pizzaCutter.InitPizza(pizza);
-            pizza.Slices = pizzaCutter.Cut();           
+            pizza.Slices = pizzaCutter.InitialCut(pizza);           
 
             //Write
             WriteOutFile(pizza, file);
